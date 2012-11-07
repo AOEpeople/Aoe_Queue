@@ -1,2 +1,3 @@
 app/etc/modules/*						app/etc/modules/
 app/code/local/Aoe/Queue				app/code/local/Aoe/Queue
+tests/Aoe_Queue                         tests/Aoe_Queue
