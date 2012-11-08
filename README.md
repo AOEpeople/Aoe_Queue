@@ -21,6 +21,6 @@
     $queue = Mage::getModel('aoe_queue/queue'); /* @var $queue Aoe_Queue_Model_Queue */
     $messages = $queue->receive(5); /* @var $messages Zend_Queue_Message_Iterator */
     foreach ($messages as $message) { /* @var $message Aoe_Queue_Model_Message */
-        Mage::getModel('aoe_queue/dummy')->test('-+', '5');
+        $message->execute();
     }
 
