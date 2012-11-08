@@ -5,4 +5,23 @@
 			<version>0.0.1</version>
 		</Aoe_Queue>
 	</modules>
+	<global>
+		<resources>
+			<aoe_queue>
+				<setup>
+					<module>Aoe_Queue</module>
+				</setup>
+			</aoe_queue>
+		</resources>
+		<models>
+			<aoe_queue>
+				<class>Aoe_Queue_Model</class>
+			</aoe_queue>
+		</models>
+		<helpers>
+			<aoe_queue>
+				<class>Aoe_Queue_Helper</class>
+			</aoe_queue>
+		</helpers>
+	</global>
 </config>
