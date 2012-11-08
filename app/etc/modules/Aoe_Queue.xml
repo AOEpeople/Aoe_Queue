@@ -5,7 +5,7 @@
 			<codePool>local</codePool>
 			<active>true</active>
 			<depends>
-				<Mage_Crone/>
+				<Mage_Cron/>
 			</depends>
 		</Aoe_Queue>
 	</modules>
