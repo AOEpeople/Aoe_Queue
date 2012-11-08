@@ -4,6 +4,9 @@
 		<Aoe_Queue>
 			<codePool>local</codePool>
 			<active>true</active>
+			<depends>
+				<Mage_Crone/>
+			</depends>
 		</Aoe_Queue>
 	</modules>
 </config>
