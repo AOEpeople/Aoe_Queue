@@ -24,4 +24,27 @@
 			</aoe_queue>
 		</helpers>
 	</global>
+
+	<crontab>
+		<jobs>
+			<aoe_queue>
+				<schedule>
+					<config_path>system/aoe_queue/cron_expr</config_path>
+				</schedule>
+				<run>
+					<model>aoe_queue/cron::processQueue</model>
+				</run>
+			</aoe_queue>
+		</jobs>
+	</crontab>
+
+	<default>
+		<system>
+			<aoe_queue>
+				<max_runtime>50</max_runtime>
+				<cron_expr>* * * * *</cron_expr>
+			</aoe_queue>
+		</system>
+	</default>
+
 </config>

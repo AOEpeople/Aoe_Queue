@@ -24,3 +24,8 @@
         $message->execute();
     }
 
+## Cron configuration
+
+    In System > Configuration > Advanced > System > Queue
+
+    Use Aoe_Scheduler to run a separate cronjob to process the aoe_queue task so this won't block the other tasks.

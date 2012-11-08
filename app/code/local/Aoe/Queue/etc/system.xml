@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config>
+	<sections>
+		<system>
+			<groups>
+				<aoe_queue translate="label comment" module="aoe_queue">
+					<label>Aoe_Queue Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>100</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>0</show_in_website>
+					<show_in_store>0</show_in_store>
+					<comment>The queue will be processed by a cron task. Configure the maximum runtime and the execution
+						frequency in a way the won't overlap. Also try Aoe_Scheduler's feature to define a separate
+						thread group for those tasks.
+					</comment>
+					<fields>
+						<cron_expr translate="label">
+							<label>Run Queue Every</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</cron_expr>
+						<max_runtime translate="label">
+							<label>Maximum runtime (in seconds)</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<comment>Please note, that this is only an estimated value. The actual runtime can be longer
+								depending of the runtime of the current job.
+							</comment>
+						</max_runtime>
+					</fields>
+				</aoe_queue>
+			</groups>
+		</system>
+	</sections>
+</config>

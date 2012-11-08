@@ -12,9 +12,18 @@ class Aoe_Queue_Model_Queue extends Zend_Queue {
      * Constructor
      */
     public function __construct($queueName='default') {
+
+        if (empty($queueName)) {
+            $queueName = 'default';
+        }
+
+        if (!is_string($queueName)) {
+            Mage::throwException('Invalid queueName');
+        }
+
         // reusing Magento config
         // TODO: introduce custom database handle for the actual connection later
-        $dbConfig = Mage::getSingleton('core/resource')->getConnection()->getConfig();
+        $dbConfig = Mage::getSingleton('core/resource')->getConnection('core_write')->getConfig();
 
         $config = array(
             'name' => $queueName,
