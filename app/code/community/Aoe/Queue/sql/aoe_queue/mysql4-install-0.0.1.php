@@ -1,59 +1,113 @@
 <?php
+/* @var $this Mage_Core_Model_Resource_Setup */
+$this->startSetup();
 
-/* @var $installer Mage_Core_Model_Resource_Setup */
+$this->getConnection()->dropTable($this->getTable('aoe_queue/queue'));
+$this->getConnection()->dropTable($this->getTable('aoe_queue/message'));
 
-$installer = $this;
+$queue = $this->getConnection()->newTable($this->getTable('aoe_queue/queue'));
+$queue->addColumn(
+    'queue_id',
+    Varien_Db_Ddl_Table::TYPE_INTEGER,
+    null,
+    array(
+        'identity' => true,
+        'primary'  => true,
+        'unsigned' => true,
+        'nullable' => false,
+    )
+);
+$queue->addColumn(
+    'queue_name',
+    Varien_Db_Ddl_Table::TYPE_TEXT,
+    100,
+    array(
+        'nullable' => false,
+    )
+);
+$queue->addColumn(
+    'timeout',
+    Varien_Db_Ddl_Table::TYPE_SMALLINT,
+    null,
+    array(
+        'unsigned' => true,
+        'nullable' => false,
+        'default'  => 30
+    )
+);
+$this->getConnection()->createTable($queue);
 
-$installer->startSetup();
+$message = $this->getConnection()->newTable($this->getTable('aoe_queue/message'));
+$message->addColumn(
+    'message_id',
+    Varien_Db_Ddl_Table::TYPE_BIGINT,
+    null,
+    array(
+        'identity' => true,
+        'primary'  => true,
+        'unsigned' => true,
+        'nullable' => false,
+    )
+);
+$message->addColumn(
+    'queue_id',
+    Varien_Db_Ddl_Table::TYPE_INTEGER,
+    null,
+    array(
+        'unsigned' => true,
+        'nullable' => false,
+    )
+);
+$message->addColumn(
+    'handle',
+    Varien_Db_Ddl_Table::TYPE_TEXT,
+    32,
+    array(
+        'nullable' => true,
+    )
+);
+$message->addColumn(
+    'body',
+    Varien_Db_Ddl_Table::TYPE_TEXT,
+    8192,
+    array(
+        'nullable' => false,
+    )
+);
+$message->addColumn(
+    'md5',
+    Varien_Db_Ddl_Table::TYPE_TEXT,
+    32,
+    array(
+        'nullable' => false,
+    )
+);
+$message->addColumn(
+    'timeout',
+    Varien_Db_Ddl_Table::TYPE_DECIMAL,
+    array(14, 4),
+    array(
+        'unsigned' => true,
+        'nullable' => true,
+    )
+);
+$message->addColumn(
+    'created',
+    Varien_Db_Ddl_Table::TYPE_INTEGER,
+    null,
+    array(
+        'unsigned' => true,
+        'nullable' => false,
+    )
+);
+$message->addForeignKey(
+    $this->getFkName('aoe_queue/message', 'queue_id', 'aoe_queue/queue', 'queue_id'),
+    'queue_id',
+    $this->getTable('aoe_queue/queue'),
+    'queue_id',
+    Varien_Db_Ddl_Table::ACTION_CASCADE,
+    Varien_Db_Ddl_Table::ACTION_CASCADE
+);
+$this->getConnection()->createTable($message);
 
-
-/**
- * This is ugly, I know. Should be done in a clean way later. For the quick'n'dirty proof of concept this is good enough.
- * The table structure is defined in Zend Framework lib/Zend/Queue/Adapter/Db/mysql.sql
- */
-
-$installer->run("
---
--- Table structure for table `message`
---
-
-DROP TABLE IF EXISTS `message`;
-CREATE TABLE IF NOT EXISTS `message` (
-  `message_id` bigint(20) unsigned NOT NULL auto_increment,
-  `queue_id` int(10) unsigned NOT NULL,
-  `handle` char(32) default NULL,
-  `body` varchar(8192) NOT NULL,
-  `md5` char(32) NOT NULL,
-  `timeout` decimal(14,4) unsigned default NULL,
-  `created` int(10) unsigned NOT NULL,
-  PRIMARY KEY  (`message_id`),
-  UNIQUE KEY `message_handle` (`handle`),
-  KEY `message_queueid` (`queue_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `queue`
---
-
-DROP TABLE IF EXISTS `queue`;
-CREATE TABLE IF NOT EXISTS `queue` (
-  `queue_id` int(10) unsigned NOT NULL auto_increment,
-  `queue_name` varchar(100) NOT NULL,
-  `timeout` smallint(5) unsigned NOT NULL default '30',
-  PRIMARY KEY  (`queue_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `message`
---
-ALTER TABLE `message`
-  ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `queue` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-");
-
-$installer->endSetup();
+$this->endSetup();

@@ -4,15 +4,15 @@
  * Queue model
  *
  * @author Fabrizio Branca
- * @since 2012-11-07
+ * @since  2012-11-07
  */
-class Aoe_Queue_Model_Queue extends Zend_Queue {
-
+class Aoe_Queue_Model_Queue extends Zend_Queue
+{
     /**
      * Constructor
      */
-    public function __construct($queueName='default') {
-
+    public function __construct($queueName = 'default')
+    {
         if (empty($queueName)) {
             $queueName = 'default';
         }
@@ -21,50 +21,56 @@ class Aoe_Queue_Model_Queue extends Zend_Queue {
             Mage::throwException('Invalid queueName');
         }
 
-        // reusing Magento config
-        // TODO: introduce custom database handle for the actual connection later
-        $dbConfig = Mage::getSingleton('core/resource')->getConnection('core_write')->getConfig();
+        /** @var Mage_Core_Model_Resource $resource */
+        $resource = Mage::getModel('core/resource');
+
+        /** @var Varien_Db_Adapter_Interface $connection */
+        $connection = $resource->getConnection(Mage_Core_Model_Resource::DEFAULT_WRITE_RESOURCE);
 
         $config = array(
-            'name' => $queueName,
-            // TODO: is the Magento config object compatible to the expected driverOptions?
-            'messageClass' => 'Aoe_Queue_Model_Message',
-            'driverOptions' => array(
-                'host'     => $dbConfig['host'],
-                'port'     => '',
-                'username' => $dbConfig['username'],
-                'password' => $dbConfig['password'],
-                'dbname'   => $dbConfig['dbname'],
-                'type'     => $dbConfig['type']
-            )
+            'name'           => $queueName,
+            'messageClass'   => 'Aoe_Queue_Model_Message',
+            'dbAdapter'      => $connection,
+            'dbQueueTable'   => $resource->getTableName('aoe_queue/queue'),
+            'dbMessageTable' => $resource->getTableName('aoe_queue/message'),
         );
 
-        parent::__construct('Db', $config);
+        parent::__construct($config);
+
+        /** @var Aoe_Queue_Model_Adapter_Db $adapter */
+        $adapter = Mage::getModel('aoe_queue/adapter_db', $this->getOptions());
+        $this->setAdapter($adapter);
     }
 
     /**
      * Preventing devs from creating new queue with this class.
      *
      * @param string $name
-     * @param null $timeout
+     * @param null   $timeout
+     *
      * @return false|void|Zend_Queue
      * @throws Exception
      */
-    public function createQueue($name, $timeout = null) {
+    public function createQueue($name, $timeout = null)
+    {
         throw new Exception('Creating a queue like this will create an object of class Zend_Queue instead of Aoe_Queue_Model_Queue. Please use the constructor instead.');
     }
 
     /**
-     * @param $callback
+     * @param       $callback
      * @param array $parameterArray
+     *
      * @return Zend_Queue_Message
      */
-    public function addTask($callback, array $parameterArray=array()) {
-        $body = serialize(array(
-            'model' => $callback,
-            'parameters' => $parameterArray
-        ));
+    public function addTask($callback, array $parameterArray = array())
+    {
+        $body = Zend_Json::encode(
+            array(
+                'model'      => $callback,
+                'parameters' => $parameterArray
+            )
+        );
+
         return $this->send($body);
     }
-
 }

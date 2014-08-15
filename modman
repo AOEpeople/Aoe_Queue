@@ -1,3 +1,2 @@
-app/etc/modules/*						app/etc/modules/
-app/code/community/Aoe/Queue			app/code/community/Aoe/Queue
-tests/Aoe_Queue                         tests/Aoe_Queue
+app/etc/modules/Aoe_Queue.xml
+app/code/community/Aoe/Queue
