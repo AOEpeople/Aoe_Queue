@@ -51,7 +51,7 @@
         <system>
             <aoe_queue>
                 <max_runtime>50</max_runtime>
-                <cron_expr>* * * * *</cron_expr>
+                <cron_expr>always</cron_expr>
             </aoe_queue>
         </system>
     </default>
