@@ -1,15 +1,16 @@
 {
-    "name": "AOEpeople/Aoe_Queue",
+    "name": "aoepeople/aoe_queue",
+    "keywords": ["Magento"],
     "type": "magento-module",
     "description": "Generic queue based on Zend_Queue",
     "require": {
-        "magento-hackathon/magento-composer-installer": "dev-master"
+        "magento-hackathon/magento-composer-installer": "*"
     },
-    "license": "GPLv3",
+    "license": "GPL-3.0",
     "authors": [
         {
             "name":"Fabrizio Branca",
-            "email":"mail@{firstname}-{lastname}.de"
+            "email":"{firstname}.{lastname}@aoe.com"
         }
     ]
 }
