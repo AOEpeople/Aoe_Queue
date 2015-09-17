@@ -1,8 +1,13 @@
 <?php
-
 /**
- * @author Lee Saferite <lee.saferite@aoe.com>
- * @since  2014-08-14
+ * AOE Queue - Queue implementation for Magento based on Zend Queue
+ *
+ * Database adapter
+ * 
+ * @category Mage
+ * @package  Aoe_Queue
+ * @author   Lee Saferite <lee.saferite@aoe.com>
+ * @since    2014-08-14
  */
 class Aoe_Queue_Model_Adapter_Db extends Zend_Queue_Adapter_Db
 {
@@ -14,7 +19,7 @@ class Aoe_Queue_Model_Adapter_Db extends Zend_Queue_Adapter_Db
      *
      * @return self
      *
-     * @throws Zend_Queue_Exception
+     * @throws Zend_Queue_Exception If requires options are not set
      */
     public function __construct($options, Zend_Queue $queue = null)
     {
@@ -45,7 +50,7 @@ class Aoe_Queue_Model_Adapter_Db extends Zend_Queue_Adapter_Db
         $queueTable = $this->_options['dbQueueTable'];
         $messageTable = $this->_options['dbMessageTable'];
 
-        $this->_queueTable = new Zend_Db_Table(array('db' => $db, 'name' => $queueTable, 'primary' => 'queue_id'));
+        $this->_queueTable   = new Zend_Db_Table(array('db' => $db, 'name' => $queueTable, 'primary' => 'queue_id'));
         $this->_messageTable = new Zend_Db_Table(array('db' => $db, 'name' => $messageTable, 'primary' => 'message_id'));
     }
 }

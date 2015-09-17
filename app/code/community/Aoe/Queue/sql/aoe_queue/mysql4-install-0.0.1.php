@@ -1,4 +1,16 @@
 <?php
+/**
+ * AOE Queue - Queue implementation for Magento based on Zend Queue
+ *
+ * Set up the AOE Queue database tables
+ * 
+ * @category Mage
+ * @package  Aoe_Queue
+ * @author   Fabrizio Branca
+ * @since    2012-11-07
+ */
+?>
+<?php
 /* @var $this Mage_Core_Model_Resource_Setup */
 $this->startSetup();
 

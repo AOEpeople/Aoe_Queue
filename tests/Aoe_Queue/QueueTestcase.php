@@ -16,8 +16,8 @@ class PHPUnit_Extensions_Story_TestCase {}
  * @author Fabrizio Branca
  * @since 2012-11-07
  */
-class QueueTestcase extends PHPUnit_Framework_TestCase {
-
+class QueueTestcase extends PHPUnit_Framework_TestCase
+{
     /**
      * @var Aoe_Queue_Model_Queue
      */
@@ -28,19 +28,24 @@ class QueueTestcase extends PHPUnit_Framework_TestCase {
      */
     protected $_queueName;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->_queueName = 'testqueue_' . time();
 
         $queue = Mage::getModel('aoe_queue/queue', $this->_queueName); /* @var $queue Aoe_Queue_Model_Queue */
         $this->_queue = $queue;
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->_queue->deleteQueue();
     }
 
-    public function testAddToQueueAndExecute() {
-
+    /**
+     * Should add a dummy task to the queue and execute it
+     */
+    public function testAddToQueueAndExecute()
+    {
         // adding task
         $this->_queue->addTask('aoe_queue/dummy::test', array('-+', '5'));
 
@@ -53,5 +58,4 @@ class QueueTestcase extends PHPUnit_Framework_TestCase {
             $this->assertEquals($expectedResult, $actualResult);
         }
     }
-
 }
