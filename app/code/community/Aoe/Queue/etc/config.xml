@@ -60,7 +60,7 @@
     <default>
         <system>
             <aoe_queue>
-                <max_runtime>50</max_runtime>
+                <max_runtime>60</max_runtime>
                 <cron_expr>always</cron_expr>
             </aoe_queue>
         </system>

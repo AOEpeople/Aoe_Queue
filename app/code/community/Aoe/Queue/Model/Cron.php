@@ -17,12 +17,12 @@ class Aoe_Queue_Model_Cron
      */
     public function processQueue()
     {
-        $starttime = microtime(true);
-        $maxRuntime = 60; // TODO: read from configuration
+        $starttime  = microtime(true);
+        $maxRuntime = Mage::getStoreConfig('system/aoe_queue/max_runtime');
 
         $queueNames = Mage::getSingleton('aoe_queue/queue')->getQueues();
 
-        /* @var $queues Aoe_Queue_Model_Queue[] */
+        /* @var $queues Aoe_Queue_Model_Queue */
         $queues = array();
         foreach ($queueNames as $queueName) {
             $tmp = Mage::getModel('aoe_queue/queue', $queueName); /* @var $tmp Aoe_Queue_Model_Queue */
