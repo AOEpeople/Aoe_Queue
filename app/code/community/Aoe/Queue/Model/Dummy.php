@@ -1,22 +1,25 @@
 <?php
-
 /**
- * Dummy model used in a unit test
+ * AOE Queue - Queue implementation for Magento based on Zend Queue
  *
- * @author Fabrizio Branca
- * @since 2012-11-07
+ * Dummy model used in a unit test
+ * 
+ * @category Mage
+ * @package  Aoe_Queue
+ * @author   Fabrizio Branca
+ * @since    2012-11-08
  */
-class Aoe_Queue_Model_Dummy {
-
+class Aoe_Queue_Model_Dummy
+{
     /**
      * Wrapper for str_repeat
      *
-     * @param $string
-     * @param $repeat
+     * @param  string $string
+     * @param  int    $repeat
      * @return string
      */
-    public function test($string, $repeat) {
+    public function test($string, $repeat)
+    {
         return str_repeat($string, $repeat);
     }
-
 }

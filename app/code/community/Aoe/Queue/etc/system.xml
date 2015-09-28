@@ -1,4 +1,14 @@
 <?xml version="1.0"?>
+<!--
+/**
+ * AOE Queue - Queue implementation for Magento based on Zend Queue
+ *
+ * @category Mage
+ * @package  Aoe_Queue
+ * @author   Fabrizio Branca
+ * @since    2012-11-07
+ */
+-->
 <config>
 	<sections>
 		<system>
@@ -10,9 +20,9 @@
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<comment>The queue will be processed by a cron task. Configure the maximum runtime and the execution
+					<comment><![CDATA[The queue will be processed by a cron task. Configure the maximum runtime and the execution
 						frequency in a way the won't overlap. Also try Aoe_Scheduler's feature to define a separate
-						thread group for those tasks.
+						thread group for those tasks.]]>
 					</comment>
 					<fields>
 						<cron_expr translate="label">
@@ -30,8 +40,8 @@
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
-							<comment>Please note, that this is only an estimated value. The actual runtime can be longer
-								depending of the runtime of the current job.
+							<comment><![CDATA[Please note, that this is only an estimated value. The actual runtime can be longer
+								depending of the runtime of the current job.]]>
 							</comment>
 						</max_runtime>
 					</fields>

@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * AOE Queue - Queue implementation for Magento based on Zend Queue
+ *
+ * @category Mage
+ * @package  Aoe_Queue
+ * @author   Fabrizio Branca
+ * @since    2012-11-07
+ */
+-->
 <config>
     <modules>
         <Aoe_Queue>
@@ -50,7 +60,7 @@
     <default>
         <system>
             <aoe_queue>
-                <max_runtime>50</max_runtime>
+                <max_runtime>60</max_runtime>
                 <cron_expr>always</cron_expr>
             </aoe_queue>
         </system>

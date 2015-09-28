@@ -1,15 +1,22 @@
 <?php
-
 /**
- * Queue model
+ * AOE Queue - Queue implementation for Magento based on Zend Queue
  *
- * @author Fabrizio Branca
- * @since  2012-11-07
+ * Queue model handles the instantiation and creation of a queue item
+ * 
+ * @category Mage
+ * @package  Aoe_Queue
+ * @author   Fabrizio Branca
+ * @since    2012-11-07
  */
 class Aoe_Queue_Model_Queue extends Zend_Queue
 {
     /**
      * Constructor
+     * 
+     * @param  string $queueName
+     * 
+     * @throws Mage_Core_Exception If $queueName is not a string
      */
     public function __construct($queueName = 'default')
     {
@@ -45,20 +52,25 @@ class Aoe_Queue_Model_Queue extends Zend_Queue
     /**
      * Preventing devs from creating new queue with this class.
      *
-     * @param string $name
-     * @param null   $timeout
+     * @param  string   $name
+     * @param  null|int $timeout
      *
-     * @return false|void|Zend_Queue
+     * @return void
      * @throws Exception
      */
     public function createQueue($name, $timeout = null)
     {
-        throw new Exception('Creating a queue like this will create an object of class Zend_Queue instead of Aoe_Queue_Model_Queue. Please use the constructor instead.');
+        throw new Exception(
+            'Creating a queue like this will create an object of class Zend_Queue instead of Aoe_Queue_Model_Queue. '
+            . 'Please use the constructor instead.'
+        );
     }
 
     /**
-     * @param       $callback
-     * @param array $parameterArray
+     * Adds a task to the queue
+     * 
+     * @param string $callback       Dev class code and method, e.g. "model/class::method"
+     * @param array  $parameterArray Parameters to pass in for the task
      *
      * @return Zend_Queue_Message
      */
