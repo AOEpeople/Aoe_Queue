@@ -25,12 +25,10 @@ class Aoe_Queue_Model_Cron
         /* @var $queues Aoe_Queue_Model_Queue */
         $queues = array();
         foreach ($queueNames as $queueName) {
-            $tmp = Mage::getModel('aoe_queue/queue', $queueName); /* @var $tmp Aoe_Queue_Model_Queue */
-            if ($tmp->count() == 0) {
-                // $statistics[$queueName] = 'deleted';
-                // $tmp->deleteQueue();
-            } else {
-                $queues[$queueName] = $tmp;
+            /* @var Aoe_Queue_Model_Queue $queue */
+            $queue = Mage::getModel('aoe_queue/queue', $queueName);
+            if ($queue->count() > 0) {
+                $queues[$queueName] = $queue;
             }
         }
 
@@ -54,7 +52,6 @@ class Aoe_Queue_Model_Cron
                         }
                     }
                 } else {
-                    // $queue->deleteQueue();
                     unset($queues[$queueName]);
                 }
             }
