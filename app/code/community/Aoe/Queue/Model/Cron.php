@@ -15,22 +15,20 @@ class Aoe_Queue_Model_Cron
      * Processes the queue, executing as necessary
      * @return array Statistics
      */
-    public function processQueue()
+    public function processQueue(Mage_Cron_Model_Schedule $schedule = null)
     {
         $starttime  = microtime(true);
         $maxRuntime = Mage::getStoreConfig('system/aoe_queue/max_runtime');
 
         $queueNames = Mage::getSingleton('aoe_queue/queue')->getQueues();
 
-        /* @var $queues Aoe_Queue_Model_Queue */
+        /* @var Aoe_Queue_Model_Queue[] $queue */
         $queues = array();
         foreach ($queueNames as $queueName) {
-            $tmp = Mage::getModel('aoe_queue/queue', $queueName); /* @var $tmp Aoe_Queue_Model_Queue */
-            if ($tmp->count() == 0) {
-                // $statistics[$queueName] = 'deleted';
-                // $tmp->deleteQueue();
-            } else {
-                $queues[$queueName] = $tmp;
+            /* @var Aoe_Queue_Model_Queue $queue */
+            $queue = Mage::getModel('aoe_queue/queue', $queueName);
+            if ($queue->count() > 0) {
+                $queues[$queueName] = $queue;
             }
         }
 
@@ -39,25 +37,39 @@ class Aoe_Queue_Model_Cron
         // while there are queues with messages left
         while (((microtime(true) - $starttime) < $maxRuntime) && count($queues)) {
             foreach ($queues as $queueName => $queue) {
+                /** @var Aoe_Queue_Model_Queue $queue */
                 $messages = $queue->receive(1);
                 if (count($messages) > 0) {
                     foreach ($messages as $message) {
                         /* @var $message Aoe_Queue_Model_Message */
-                        $message->execute();
-                        $queue->deleteMessage($message);
-                        if (empty($statistics[$queueName])) {
-                            $statistics[$queueName] = 0;
-                        }
-                        $statistics[$queueName]++;
-                        if ((microtime(true) - $starttime) > $maxRuntime) {
-                            return $statistics;
+                        try {
+                            $message->execute();
+                            $queue->deleteMessage($message);
+                            if (empty($statistics[$queueName])) {
+                                $statistics[$queueName] = 0;
+                            }
+                            $statistics[$queueName]++;
+                            if ((microtime(true) - $starttime) > $maxRuntime) {
+                                return $statistics;
+                            }
+                        } catch (Exception $e) {
+                            /**
+                             * Do not release the queue message on purpose
+                             * This prevents a bad message from being constantly processed
+                             * The message will become available again after the timeout
+                             */
+                            Mage::logException($e);
+                            $statistics['__errors__'][$queueName][$message->message_id] = $e->getMessage();
                         }
                     }
                 } else {
-                    // $queue->deleteQueue();
                     unset($queues[$queueName]);
                 }
             }
+        }
+
+        if ($schedule && isset($statistics['__errors__']) && count($statistics['__errors__'])) {
+            $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_ERROR);
         }
 
         return $statistics;
