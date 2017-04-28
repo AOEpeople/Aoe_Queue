@@ -15,7 +15,7 @@ class Aoe_Queue_Model_Cron
      * Processes the queue, executing as necessary
      * @return array Statistics
      */
-    public function processQueue()
+    public function processQueue(Mage_Cron_Model_Schedule $schedule = null)
     {
         $starttime  = microtime(true);
         $maxRuntime = Mage::getStoreConfig('system/aoe_queue/max_runtime');
@@ -65,6 +65,10 @@ class Aoe_Queue_Model_Cron
                     unset($queues[$queueName]);
                 }
             }
+        }
+
+        if ($schedule && isset($statistics['__errors__']) && count($statistics['__errors__'])) {
+            $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_ERROR);
         }
 
         return $statistics;
