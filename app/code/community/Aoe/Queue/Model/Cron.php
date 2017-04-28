@@ -41,14 +41,24 @@ class Aoe_Queue_Model_Cron
                 if (count($messages) > 0) {
                     foreach ($messages as $message) {
                         /* @var $message Aoe_Queue_Model_Message */
-                        $message->execute();
-                        $queue->deleteMessage($message);
-                        if (empty($statistics[$queueName])) {
-                            $statistics[$queueName] = 0;
-                        }
-                        $statistics[$queueName]++;
-                        if ((microtime(true) - $starttime) > $maxRuntime) {
-                            return $statistics;
+                        try {
+                            $message->execute();
+                            $queue->deleteMessage($message);
+                            if (empty($statistics[$queueName])) {
+                                $statistics[$queueName] = 0;
+                            }
+                            $statistics[$queueName]++;
+                            if ((microtime(true) - $starttime) > $maxRuntime) {
+                                return $statistics;
+                            }
+                        } catch (Exception $e) {
+                            /**
+                             * Do not release the queue message on purpose
+                             * This prevents a bad message from being constantly processed
+                             * The message will become available again after the timeout
+                             */
+                            Mage::logException($e);
+                            $statistics['__errors__'][$queueName][$message->message_id] = $e->getMessage();
                         }
                     }
                 } else {
