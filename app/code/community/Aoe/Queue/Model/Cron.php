@@ -22,7 +22,7 @@ class Aoe_Queue_Model_Cron
 
         $queueNames = Mage::getSingleton('aoe_queue/queue')->getQueues();
 
-        /* @var $queues Aoe_Queue_Model_Queue */
+        /* @var Aoe_Queue_Model_Queue[] $queue */
         $queues = array();
         foreach ($queueNames as $queueName) {
             /* @var Aoe_Queue_Model_Queue $queue */
@@ -37,6 +37,7 @@ class Aoe_Queue_Model_Cron
         // while there are queues with messages left
         while (((microtime(true) - $starttime) < $maxRuntime) && count($queues)) {
             foreach ($queues as $queueName => $queue) {
+                /** @var Aoe_Queue_Model_Queue $queue */
                 $messages = $queue->receive(1);
                 if (count($messages) > 0) {
                     foreach ($messages as $message) {
